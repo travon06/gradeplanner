@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .block {
+            max-width: 219px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 10px;
+            padding: 20px;
+            gap: 10px;
+            box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+
+        }
+        
+        .block input[type="submit"] {
+            background-color: white;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 10px;
+            padding: 5px;
+            width: 60px;
+            height: 25px;
+            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
+            transition: width .3s ease, heigth .3s ease
+        }
+
+        .block input[type="text"], .block input[type="password"] {
+            outline: none;
+        }
+        
+        .block input[type="submit"]:hover {
+            transform: scale(1.05);
+        }
+
+        .block input[type="submit"]:active {
+            transform: scale(.9);
+        }
+
+        .block .errHandeler {
+            display: none;
+            justify-content: center;
+            font-size: 12px;
+            background-color: hsl(0, 95%, 63%);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            height: max-content;
+
+        }
+    </style>
+</head>
+<body>
+    <form id="loginForm" class="block">
+        <p id="errHandeler" class="errHandeler"></p>
+        <label for="usernameInput">Username:</label>
+        <input type="text" id="usernameInput" name="username" placeholder="Username">
+        <label for="passwordInput">Password:</label>
+        <input type="password" id="passwordInput" name="password" placeholder="Password">
+        <input id="submitBtn" type="submit" value="Login">
+        <a href="http://localhost:8080/auth/register" style="font-size: 13px;">Register</a>
+    </form>
+    <script>
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginForm = document.getElementById('loginForm');
+
+        usernameInput.addEventListener('keydown', event => {
+            if(event.keyCode === 13) {
+                event.preventDefault();
+                passwordInput.focus();
+            }
+        });
+        passwordInput.addEventListener('keydown', event => {
+            if(event.keyCode === 13) {
+                event.preventDefault();
+                submitLoginForm();
+            }
+        });
+
+        loginForm.addEventListener('submit', event => {
+            event.preventDefault();
+            submitLoginForm();
+        });
+
+        function submitLoginForm() {
+            const formData = {
+                username: usernameInput.value,
+                password: passwordInput.value
+            };
+
+            fetch('http://localhost:8080/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.err);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                if(data.redirect) window.location.href = data.redirectTo;                
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('errHandeler').textContent = err.toString().split(':')[1];
+                document.getElementById('errHandeler').style.display = 'block';
+            });
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            border: solid 1px hsl(0, 0%, 80%);
+            padding: 10px;
+            box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+        }
+
+        .block {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid hsl(0, 0%, 80%);
+            box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+            padding: 20px;
+            margin: 10px;
+            height: max-content;
+        }
+
+        .block input[type="text"] {
+            outline: none;
+        }
+
+        .block input[type="button"] {
+            background-color: white;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 10px;
+            padding: 5px;
+            width: 60px;
+            height: 25px;
+            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
+            transition: width .3s ease, heigth .3s ease
+        }
+
+        
+        .block input[type="button"]:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+
+        .block input[type="button"]:active {
+            transform: scale(.9);
+        }
+
+        .block .errHandeler {
+            display: none;
+            justify-content: center;
+            font-size: 12px;
+            background-color: hsl(0, 95%, 63%);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            height: max-content;
+
+        }
+
+        .block textarea {
+            outline: none;
+        }
+
+        .homeworkElement {
+            display: flex;
+            flex-direction: column;
+            color: black;
+            border: 1px solid hsl(0, 0%, 80%);
+            box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+            margin: 5px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .homeworkElement input[type="submit"] {
+            background-color: white;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 10px;
+            padding: 5px;
+            width: 60px;
+            height: 25px;
+            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
+            transition: width .3s ease, heigth .3s ease;
+        }
+
+        .homeworkElement input[type="submit"]:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+
+        .homeworkElement input[type="submit"]:active {
+            transform: scale(0.9);
+        }
+
+
+        .homeworkElement input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border: 1px solid hsl(0, 0%, 80%);
+            background-color: rgb(144, 241, 117);
+            box-shadow: 2px 2px 2px hsla(0, 0%, 0%, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .homeworkElement input[type="checkbox"]:checked {
+            background-color: rgb(241, 218, 117);
+        }
+
+
+        #gradesDiv, #homeworkDiv {
+            width: 60%;
+        }
+
+        #gradesDiv > span {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        #changeGradesForm, #addHomeworkForm{
+         width: 40%;
+        }
+
+        #changeGradesForm  > *, #addHomeworkForm > *{
+         margin: 5px;
+        }
+
+        /*#changeGradesForm input, #addHomeworkForm input, #addHomeworkForm textarea {
+            outline: none;
+        }*/
+
+        textarea {
+            resize: none;
+        }
+
+        #inputDiv {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <span id="usernameSpan"></span>
+        <span id="emailSpan"></span>
+    </nav>
+    <div id="firstLine" style="display: flex;">
+        <div id="gradesDiv" class="block">
+            <label style="align-self: center;"><strong>Grades:</strong></label>
+        </div>
+        <form id="changeGradesForm" class="block">
+            <p id="gradesErrHandeler" class="errHandeler"></p>
+            <label for="subjectInputGrades">Subject:</label>
+            <input type="text" id="subjectInputGrades" placeholder="Subject">
+            <label for="gradesInput">Grades:</label>
+            <input type="text" id="gradesInput" placeholder="1,2,3,...">
+            <div id="inputDiv">
+                <input id="addBtn" type="button" value="Add">
+                <input id="setBtn" type="button" value="Set">
+                <input id="deleteBtn" type="button" value="Delete">
+            </div>
+        </form>
+    </div>
+    <div id="secondLine" style="display: flex;">
+        <div id="homeworkDiv" class="block">
+            <label style="align-self: center;"><strong>Homework:</strong></label>
+            
+        </div>
+        <form id="addHomeworkForm" class="block">
+            <p id="homeworkErrHandeler" class="errHandeler"></p>
+            <label for="subjectInputHomework">Subject:</label>
+            <input type="text" id="subjectInputHomework" placeholder="Subject">
+            <label for="descriptionInput">Description:</label>
+            <textarea id="descriptionInput" cols="30" rows="7" placeholder="This is what I need to do"></textarea>
+            <input type="button" value="Submit" id="homeworkSubmitBtn" style="align-self: center;">
+        </form>     
+    </div>
+    
+    
+    <script>
+        loadUserdata().then(userdata => {
+            insertUserProfile(userdata);
+            insertUserGrades(userdata);
+            insertUserHomework(userdata);
+            setupChangeGradesForm();
+            setupAddHomeworkForm();
+        });
+
+        // get userdata from server
+        async function loadUserdata() {
+            const res = await fetch('http://localhost:8080/dashboard/userdata');
+            const userdata = await res.json();
+            return userdata;
+        }
+
+        // insert profile data from loaded userdata
+        function insertUserProfile(userdata) {
+            document.getElementById('usernameSpan').innerHTML = `<strong>Username: </strong>${userdata.username}`;
+            document.getElementById('emailSpan').innerHTML = `<strong>Email: </strong>${userdata.email}`;
+        }
+
+        // insert grades from loaded userdata
+        function insertUserGrades(userdata) {
+            const gradesDiv = document.getElementById('gradesDiv');
+            
+            const userGrades = JSON.parse(userdata.grades);
+            const subjects = Object.keys(userGrades);
+        
+            for (let i = 0; i < subjects.length; i++) {
+                const subject = subjects[i];
+                const grades = userGrades[subject];
+        
+                const newGradesDivElement = document.createElement('span');
+                newGradesDivElement.id = i;
+                newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')}`;
+                gradesDiv.appendChild(newGradesDivElement);
+            }
+            
+        }
+
+        // insert homework from loaded userdata
+        function insertUserHomework(userdata) {
+            const homeworkDiv = document.getElementById('homeworkDiv');
+
+            for(let homework of userdata.homework) {
+                const homeworkElement = document.createElement('div');
+                const homeworkElementSubject = document.createElement('label')
+                const homeworkElementDescription = document.createElement('span');
+                const homeworkElementLastRow = document.createElement('div');
+                const homeworkElementCheckbox = document.createElement('input');
+                const homeworkElementDelete = document.createElement('input');
+
+                if(homework.done) {
+                    homeworkElementCheckbox.checked = true;
+                    homeworkElement.style.backgroundColor = 'rgb(144, 241, 117)';
+                }
+                else {
+                    homeworkElementCheckbox.checked = false;
+                    homeworkElement.style.backgroundColor = 'rgb(241, 218, 117)';
+                }
+
+                homeworkElement.id = homework._id;
+                homeworkElement.classList.add('homeworkElement');
+                
+                homeworkElementSubject.innerHTML = `<strong>${homework.subject}:</strong>`;
+
+                homeworkElementDescription.innerHTML = homework.description;
+
+                homeworkElementLastRow.style.display = 'flex';
+                homeworkElementLastRow.style.justifyContent = 'flex-end';
+
+                homeworkElementCheckbox.type = 'checkBox';
+                homeworkElementCheckbox.style.alignSelf = 'flex-end';
+
+                homeworkElementCheckbox.addEventListener('change', event => {
+                    if(event.target.checked) {
+                        homeworkElement.style.backgroundColor = 'rgb(144, 241, 117)';
+                    } else {
+                        homeworkElement.style.backgroundColor = 'rgb(241, 218, 117)';
+                    }
+                    submitHomeworkElementChanges(event.target.checked, homeworkElement.id);
+                });
+
+                homeworkElementDelete.type = 'submit';
+                homeworkElementDelete.value = 'Delete';
+
+                homeworkElementDelete.addEventListener('click', event => {
+                    event.preventDefault();
+                    deleteHomeworkElement(homeworkElement.id);
+                });
+
+                homeworkElementLastRow.appendChild(homeworkElementCheckbox);
+                homeworkElementLastRow.appendChild(homeworkElementDelete);
+                
+                homeworkElement.appendChild(homeworkElementSubject);
+                homeworkElement.appendChild(homeworkElementDescription);
+                homeworkElement.appendChild(homeworkElementLastRow);
+
+                homeworkDiv.appendChild(homeworkElement);
+            }
+        }
+
+        // setup events for addGradeskForm
+        function setupChangeGradesForm() {
+            const addGradesForm = document.getElementById('addGradesForm');
+            const subjectInput = document.getElementById('subjectInputGrades');
+            const gradesInput = document.getElementById('gradesInput');
+            const addBtn = document.getElementById('addBtn');
+            const setBtn = document.getElementById('setBtn');
+            const deleteBtn = document.getElementById('deleteBtn');
+
+            subjectInput.addEventListener('keydown', event => {
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    gradesInput.focus();
+                }
+            });
+            addBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm("add");
+            });
+            setBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm("set");
+            });
+            deleteBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm("delete");
+            });
+
+            
+        }
+
+        // setup events for addHomeworkForm
+        function setupAddHomeworkForm() {
+            const addHomeworkForm = document.getElementById('addHomeworkForm');
+            const subjectInput = document.getElementById('subjectInputHomework');
+            const descriptionInput = document.getElementById('descriptionInput');
+            const homeworkSubmitBtn = document.getElementById('homeworkSubmitBtn');
+        
+            subjectInput.addEventListener('keydown', event => {
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    descriptionInput.focus();
+                }
+            });
+        
+            descriptionInput.addEventListener('keydown', event => {
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    submitAddHomeworkForm();
+                }
+            });
+        
+            homeworkSubmitBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitAddHomeworkForm();
+            });
+        }
+
+        // send changes grades changes to server
+        function submitChangeGradesForm(operator) {
+            const data = {
+                subject: document.getElementById('subjectInputGrades').value,
+                grades: document.getElementById('gradesInput').value,
+                operator: operator
+            }
+            fetch('http://localhost:8080/dashboard/changeGrades', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.err);
+                    });
+                }
+                return res.json()
+            })
+            .then(data => {
+                if(data.redirect) window.location.href = data.redirectTo;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('gradesErrHandeler').textContent = err.toString().split(':')[1];
+                document.getElementById('gradesErrHandeler').style.display = 'flex';
+            });
+        }
+
+        0
+
+        // send new homework to server
+        function submitAddHomeworkForm() {
+            const data = {
+                subject: document.getElementById('subjectInputHomework').value,
+                description: document.getElementById('descriptionInput').value,
+            };
+
+            fetch('http://localhost:8080/dashboard/addHomework', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.err);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById('homeworkErrHandeler').style.display = 'none';
+                if(data.redirect) window.location.href = data.redirectTo;
+            })
+            .catch(err => {
+                document.getElementById('homeworkErrHandeler').textContent = err.toString().split(':')[1];
+                document.getElementById('homeworkErrHandeler').style.display = 'flex';
+                console.error(err);
+            });
+        }
+
+        // send homeworkElement changes to server
+        function submitHomeworkElementChanges(checked, id) {
+            const data = {
+                checked: checked,
+                id: id
+            };
+
+            fetch('http://localhost:8080/dashboard/homeworkChanges', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.err);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                if(data.redirect) window.location.href = data.redirectTo;
+            })
+            .catch(err => {
+                console.error(err);
+                
+            });
+        }   
+
+        function deleteHomeworkElement(elementId) {
+            const homeworkElement = document.getElementById(elementId);
+            
+            const data = {
+                elementId: elementId
+            }
+            fetch('http://localhost:8080/dashboard/deleteHomeworkElement', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.err);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                if(data.redirect) window.location.href = data.redirectTo;
+                else {
+                    const parentElement = homeworkElement.parentElement;
+
+                    // making the delete-process visible to the user
+                    homeworkElement.style.backgroundColor = 'rgb(255, 129, 129)';
+                    setTimeout(() => {
+                        parentElement.removeChild(homeworkElement);
+                    }, 600);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        }    
+    </script>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
