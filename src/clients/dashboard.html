@@ -217,21 +217,61 @@
 
         // insert grades from loaded userdata
         function insertUserGrades(userdata) {
+            
             const gradesDiv = document.getElementById('gradesDiv');
             
             const userGrades = JSON.parse(userdata.grades);
+            const userGpa = calculateStudentGpa(userGrades);
+
             const subjects = Object.keys(userGrades);
         
+            // display subjects with grades and gpa
             for (let i = 0; i < subjects.length; i++) {
                 const subject = subjects[i];
                 const grades = userGrades[subject];
         
                 const newGradesDivElement = document.createElement('span');
                 newGradesDivElement.id = i;
-                newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')}`;
+                newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')} | ${userGpa[subject].toFixed(1)}`;
                 gradesDiv.appendChild(newGradesDivElement);
             }
+
+            // display overall averrage
+            const averrageElement = document.createElement('span');
+            averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
+            gradesDiv.appendChild(averrageElement);
             
+        }
+
+        // calculate gpa for grades in student
+        function calculateStudentGpa(userGrades) {
+            let subjectsWithGpa = {};
+            let totalGradesInGrades = 0;
+            let sumOfAllGrades = 0
+        
+            for(let subject in userGrades) {
+        
+                let totalGradesInSubject = 0;
+                let sumOfGradesInSubject = 0
+        
+                for(let grade of userGrades[subject]) {
+                    totalGradesInGrades++;
+                    totalGradesInSubject++;
+        
+                    sumOfAllGrades += grade;
+                    sumOfGradesInSubject += grade;
+                }
+        
+                const subjectGpa = sumOfGradesInSubject / totalGradesInSubject;
+                
+                subjectsWithGpa[subject] = subjectGpa;
+            }
+        
+            const overallGpa = sumOfAllGrades / totalGradesInGrades;
+        
+            subjectsWithGpa['Averrage'] = overallGpa;
+        
+            return subjectsWithGpa;
         }
 
         // insert homework from loaded userdata
@@ -295,6 +335,7 @@
                 homeworkDiv.appendChild(homeworkElement);
             }
         }
+
 
         // setup events for addGradeskForm
         function setupChangeGradesForm() {
@@ -452,6 +493,7 @@
             });
         }   
 
+        // delete Homework element in the html and the homework in the database
         function deleteHomeworkElement(elementId) {
             const homeworkElement = document.getElementById(elementId);
             
