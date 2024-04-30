@@ -25,7 +25,7 @@
 
         }
         
-        .block input[type="submit"] {
+        .button1 {
             background-color: white;
             border: 1px solid hsl(0, 0%, 80%);
             border-radius: 10px;
@@ -40,11 +40,12 @@
             outline: none;
         }
         
-        .block input[type="submit"]:hover {
+        .button1:hover {
+            cursor: pointer;
             transform: scale(1.05);
         }
 
-        .block input[type="submit"]:active {
+        .button1:active {
             transform: scale(.9);
         }
 
@@ -70,7 +71,7 @@
         <input type="text" id="usernameInput" name="username" placeholder="Username">
         <label for="passwordInput">Password:</label>
         <input type="password" id="passwordInput" name="password" placeholder="Password">
-        <input id="submitBtn" type="submit" value="Register">
+        <input id="submitBtn" class="button1" type="submit" value="Register">
         <a href="http://localhost:8080/auth/login" style="font-size: 13px;">Login</a>
     </form>
     <script>

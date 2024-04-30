@@ -15,10 +15,38 @@
 
         nav {
             display: flex;
-            flex-direction: column;
-            border: solid 1px hsl(0, 0%, 80%);
-            padding: 10px;
+            justify-content: space-between;
+            border: 1px solid hsl(0, 0%, 80%);
             box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+            padding: 10px;
+            height: max-content;
+        }
+
+        nav #userInformation {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+
+        .button1 {
+            background-color: white;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 10px;
+            padding: 5px;
+            width: 60px;
+            height: 25px;
+            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
+            transition: width .3s ease, heigth .3s ease
+        }
+
+        .button1:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+
+        .button1:active {
+            transform: scale(.9);
         }
 
         .block {
@@ -33,27 +61,6 @@
 
         .block input[type="text"] {
             outline: none;
-        }
-
-        .block input[type="button"] {
-            background-color: white;
-            border: 1px solid hsl(0, 0%, 80%);
-            border-radius: 10px;
-            padding: 5px;
-            width: 60px;
-            height: 25px;
-            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
-            transition: width .3s ease, heigth .3s ease
-        }
-
-        
-        .block input[type="button"]:hover {
-            cursor: pointer;
-            transform: scale(1.05);
-        }
-
-        .block input[type="button"]:active {
-            transform: scale(.9);
         }
 
         .block .errHandeler {
@@ -82,27 +89,6 @@
             padding: 10px;
             border-radius: 10px;
         }
-
-        .homeworkElement input[type="submit"] {
-            background-color: white;
-            border: 1px solid hsl(0, 0%, 80%);
-            border-radius: 10px;
-            padding: 5px;
-            width: 60px;
-            height: 25px;
-            box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.1);
-            transition: width .3s ease, heigth .3s ease;
-        }
-
-        .homeworkElement input[type="submit"]:hover {
-            cursor: pointer;
-            transform: scale(1.05);
-        }
-
-        .homeworkElement input[type="submit"]:active {
-            transform: scale(0.9);
-        }
-
 
         .homeworkElement input[type="checkbox"] {
             appearance: none;
@@ -157,8 +143,11 @@
 </head>
 <body>
     <nav>
-        <span id="usernameSpan"></span>
-        <span id="emailSpan"></span>
+        <div id="userInformation">
+            <span id="usernameSpan"></span>
+            <span id="emailSpan"></span>
+        </div>
+        <input type="button" id="logOutBtn" class="button1" value="Log out" >
     </nav>
     <div id="firstLine" style="display: flex;">
         <div id="gradesDiv" class="block">
@@ -171,9 +160,9 @@
             <label for="gradesInput">Grades:</label>
             <input type="text" id="gradesInput" placeholder="1,2,3,...">
             <div id="inputDiv">
-                <input id="addBtn" type="button" value="Add">
-                <input id="setBtn" type="button" value="Set">
-                <input id="deleteBtn" type="button" value="Delete">
+                <input class="button1" id="addBtn" type="button" value="Add">
+                <input class="button1" id="setBtn" type="button" value="Set">
+                <input class="button1" id="deleteBtn" type="button" value="Delete">
             </div>
         </form>
     </div>
@@ -188,7 +177,7 @@
             <input type="text" id="subjectInputHomework" placeholder="Subject">
             <label for="descriptionInput">Description:</label>
             <textarea id="descriptionInput" cols="30" rows="7" placeholder="This is what I need to do"></textarea>
-            <input type="button" value="Submit" id="homeworkSubmitBtn" style="align-self: center;">
+            <input class="button1" type="button" value="Submit" id="homeworkSubmitBtn" style="align-self: center;">
         </form>     
     </div>
     
@@ -198,6 +187,7 @@
             insertUserProfile(userdata);
             insertUserGrades(userdata);
             insertUserHomework(userdata);
+            setupLogOutBtn();
             setupChangeGradesForm();
             setupAddHomeworkForm();
         });
@@ -318,6 +308,7 @@
                 });
 
                 homeworkElementDelete.type = 'submit';
+                homeworkElementDelete.classList.add('button1');
                 homeworkElementDelete.value = 'Delete';
 
                 homeworkElementDelete.addEventListener('click', event => {
@@ -531,6 +522,35 @@
                 console.error(err);
             });
         }    
+
+        // setting up the log out button
+        function setupLogOutBtn() {
+            document.getElementById('logOutBtn').addEventListener('click', event => {
+                fetch('http://localhost:8080/dashboard/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        logout: true
+                    }),
+                })
+                .then(res => {
+                    if(!res.ok) return res.json.then(err => {
+                        throw new Error(err.err);
+                    });
+
+                    return res.json();
+                })
+                .then(data => {
+                    if(data.redirect) window.location.href = data.redirectTo;
+                })
+                .catch(err => {
+                    console.err(err)
+                    console.alert(err);
+                });
+            });
+        }
     </script>
 </body>
 </html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

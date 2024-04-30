@@ -89,4 +89,15 @@ router.post('/deleteHomeworkElement', async (req, res) => {
     res.status(200).json({ redirect: false });
 });
 
+
+router.post('/logout', (req, res) => {
+    const { logout } = req.body;
+
+    if(!logout) return res.status(400).json({ err: 'something went wrong'});
+
+    req.session.user = null;
+
+    return res.status(200).json({ redirect: true, redirectTo: '/auth/login' });
+});
+
 module.exports = router;
