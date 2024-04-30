@@ -20,6 +20,7 @@ app.use(
         saveUninitialized: false,
         store: MongoStore.create({
             mongoUrl: 'mongodb://localhost:27017/gradeplanner',
+            ttl: 24 * 60 * 60 * 7
         }),
     })
 );
