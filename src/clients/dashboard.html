@@ -88,9 +88,15 @@
             margin: 5px;
             padding: 10px;
             border-radius: 10px;
+            max-width: 555px;
+            height: max-content;
         }
 
-        .homeworkElement input[type="checkbox"] {
+        .homeworkElement label, .homeworkElement span {
+            overflow-wrap: break-word;
+        }
+
+        .checkbox {
             appearance: none;
             -webkit-appearance: none;
             height: 20px;
@@ -102,7 +108,7 @@
             cursor: pointer;
         }
         
-        .homeworkElement input[type="checkbox"]:checked {
+        .checkbox:checked {
             background-color: rgb(241, 218, 117);
         }
 
@@ -138,7 +144,10 @@
             gap: 15px;
         }
 
-        
+        #homeworkBtnDiv {
+            display: flex;
+            justify-content: space-around;
+        }
     </style>
 </head>
 <body>
@@ -177,12 +186,18 @@
             <input type="text" id="subjectInputHomework" placeholder="Subject">
             <label for="descriptionInput">Description:</label>
             <textarea id="descriptionInput" cols="30" rows="7" placeholder="This is what I need to do"></textarea>
-            <input class="button1" type="button" value="Submit" id="homeworkSubmitBtn" style="align-self: center;">
+            <div id="homeworkBtnDiv">
+                <input class="button1" type="button" value="Add" id="homeworkSubmitBtn" style="align-self: center;">
+                <input type="button" class="button1" value="</>" id="homeworkSwitchHTMLBtn">
+            </div>
         </form>     
     </div>
     
     
     <script>
+
+        let descriptionIsPlain = true;
+
         loadUserdata().then(userdata => {
             insertUserProfile(userdata);
             insertUserGrades(userdata);
@@ -229,7 +244,6 @@
             // display overall averrage
             const averrageElement = document.createElement('span');
 
-            console.log(userGpa['Averrage']);
             if (!isNaN(userGpa['Averrage'])) {
                 averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
                 gradesDiv.appendChild(averrageElement);
@@ -301,6 +315,7 @@
 
                 homeworkElementCheckbox.type = 'checkBox';
                 homeworkElementCheckbox.style.alignSelf = 'flex-end';
+                homeworkElementCheckbox.classList.add('checkbox');
 
                 homeworkElementCheckbox.addEventListener('change', event => {
                     if (event.target.checked) {
@@ -377,7 +392,9 @@
             const subjectInput = document.getElementById('subjectInputHomework');
             const descriptionInput = document.getElementById('descriptionInput');
             const homeworkSubmitBtn = document.getElementById('homeworkSubmitBtn');
-            homeworkSubmitBtn.value = 'Add';
+            const homeworkSwitchHTMLBtn = document.getElementById('homeworkSwitchHTMLBtn');
+
+            homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(255, 255, 255)';
         
             subjectInput.addEventListener('keydown', event => {
                 if (event.keyCode === 13) {
@@ -396,6 +413,16 @@
             homeworkSubmitBtn.addEventListener('click', event => {
                 event.preventDefault();
                 submitAddHomeworkForm();
+            });
+
+            homeworkSwitchHTMLBtn.addEventListener('click', event => {
+                if (homeworkSwitchHTMLBtn.style.backgroundColor == 'rgb(255, 255, 255)') {
+                    descriptionIsPlain = false;
+                    homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(144, 241, 117)';
+                } else {
+                    descriptionIsPlain = true;
+                    homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(255, 255, 255)';
+                }
             });
         }
 
@@ -549,7 +576,7 @@
                     }),
                 })
                 .then(res => {
-                    if (!res.ok) return res.json.then(err => {
+                    if (!res.ok) return res.json().then(err => {
                         throw new Error(err.err);
                     });
 
@@ -559,8 +586,8 @@
                     if(data.redirect) window.location.href = data.redirectTo;
                 })
                 .catch(err => {
-                    console.err(err)
-                    console.alert(err);
+                    console.error(err)
+                    alert(err);
                 });
             });
         }
