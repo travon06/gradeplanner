@@ -228,8 +228,12 @@
 
             // display overall averrage
             const averrageElement = document.createElement('span');
-            averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
-            gradesDiv.appendChild(averrageElement);
+
+            console.log(userGpa['Averrage']);
+            if (!isNaN(userGpa['Averrage'])) {
+                averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
+                gradesDiv.appendChild(averrageElement);
+            }
             
         }
 
@@ -239,7 +243,7 @@
             let totalGradesInGrades = 0;
             let sumOfAllGrades = 0
         
-            for(let subject in userGrades) {
+            for (let subject in userGrades) {
         
                 let totalGradesInSubject = 0;
                 let sumOfGradesInSubject = 0
@@ -268,7 +272,7 @@
         function insertUserHomework(userdata) {
             const homeworkDiv = document.getElementById('homeworkDiv');
 
-            for(let homework of userdata.homework) {
+            for (let homework of userdata.homework) {
                 const homeworkElement = document.createElement('div');
                 const homeworkElementSubject = document.createElement('label')
                 const homeworkElementDescription = document.createElement('span');
@@ -299,7 +303,7 @@
                 homeworkElementCheckbox.style.alignSelf = 'flex-end';
 
                 homeworkElementCheckbox.addEventListener('change', event => {
-                    if(event.target.checked) {
+                    if (event.target.checked) {
                         homeworkElement.style.backgroundColor = 'rgb(144, 241, 117)';
                     } else {
                         homeworkElement.style.backgroundColor = 'rgb(241, 218, 117)';
@@ -338,25 +342,33 @@
             const deleteBtn = document.getElementById('deleteBtn');
 
             subjectInput.addEventListener('keydown', event => {
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     event.preventDefault();
                     gradesInput.focus();
                 }
             });
-            addBtn.addEventListener('click', event => {
-                event.preventDefault();
-                submitChangeGradesForm("add");
-            });
-            setBtn.addEventListener('click', event => {
-                event.preventDefault();
-                submitChangeGradesForm("set");
-            });
-            deleteBtn.addEventListener('click', event => {
-                event.preventDefault();
-                submitChangeGradesForm("delete");
+
+            gradesInput.addEventListener('keydown', event => {
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                    submitChangeGradesForm('add');
+                }     
             });
 
-            
+            addBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm('add');
+            });
+
+            setBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm('add');
+            });
+
+            deleteBtn.addEventListener('click', event => {
+                event.preventDefault();
+                submitChangeGradesForm('delete');
+            });
         }
 
         // setup events for addHomeworkForm
@@ -368,14 +380,14 @@
             homeworkSubmitBtn.value = 'Add';
         
             subjectInput.addEventListener('keydown', event => {
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     event.preventDefault();
                     descriptionInput.focus();
                 }
             });
         
             descriptionInput.addEventListener('keydown', event => {
-                if(event.keyCode === 13) {
+                if (event.keyCode === 13) {
                     event.preventDefault();
                     submitAddHomeworkForm();
                 }
@@ -390,7 +402,7 @@
         // send changes grades changes to server
         function submitChangeGradesForm(operator) {
             const data = {
-                subject: document.getElementById('subjectInputGrades').value,
+                subject: document.getElementById('subjectInputGrades').value.trim(),
                 grades: document.getElementById('gradesInput').value,
                 operator: operator
             }
@@ -402,7 +414,7 @@
                 body: JSON.stringify(data),
             })
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     return res.json().then(err => {
                         throw new Error(err.err);
                     });
@@ -410,7 +422,7 @@
                 return res.json()
             })
             .then(data => {
-                if(data.redirect) window.location.href = data.redirectTo;
+                if (data.redirect) window.location.href = data.redirectTo;
             })
             .catch(err => {
                 console.error(err);
@@ -436,7 +448,7 @@
                 body: JSON.stringify(data),
             })
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     return res.json().then(err => {
                         throw new Error(err.err);
                     });
@@ -469,7 +481,7 @@
                 body: JSON.stringify(data),
             })
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     return res.json().then(err => {
                         throw new Error(err.err);
                     });
@@ -500,7 +512,7 @@
                 body: JSON.stringify(data),
             })
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     return res.json().then(err => {
                         throw new Error(err.err);
                     });
@@ -508,7 +520,7 @@
                 return res.json();
             })
             .then(data => {
-                if(data.redirect) window.location.href = data.redirectTo;
+                if (data.redirect) window.location.href = data.redirectTo;
                 else {
                     const parentElement = homeworkElement.parentElement;
 
@@ -537,7 +549,7 @@
                     }),
                 })
                 .then(res => {
-                    if(!res.ok) return res.json.then(err => {
+                    if (!res.ok) return res.json.then(err => {
                         throw new Error(err.err);
                     });
 

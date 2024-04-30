@@ -22,7 +22,9 @@ router.post('/changeGrades', async (req, res) => {
     if(!subject) return res.status(400).json({ err: 'Subject is missing'});
     if(operator != 'delete' && !grades) return res.status(400).json({err: 'You need grades if you do not delete'})
 
-    let gradeList = grades.trim().split(',').map(grade => parseInt(grade));
+    // formating grades and filtering if grade is NaN
+    let gradeList = grades.trim().split(',').map(grade => parseInt(grade)).filter(grade => !isNaN(grade));
+
     const UserDb = await User.findOne({username: req.session.user.username});
     let UserGrades = JSON.parse(UserDb.grades) || {};
 
