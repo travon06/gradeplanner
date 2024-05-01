@@ -88,7 +88,6 @@
             margin: 5px;
             padding: 10px;
             border-radius: 10px;
-            max-width: 555px;
             height: max-content;
         }
 
@@ -308,7 +307,11 @@
                 
                 homeworkElementSubject.innerHTML = `<strong>${homework.subject}:</strong>`;
 
-                homeworkElementDescription.innerHTML = homework.description;
+                if(homework.descriptionIsPlain) {
+                    homeworkElementDescription.textContent = homework.description;
+                } else {
+                    homeworkElementDescription.innerHTML = homework.description;
+                }
 
                 homeworkElementLastRow.style.display = 'flex';
                 homeworkElementLastRow.style.justifyContent = 'flex-end';
@@ -377,7 +380,7 @@
 
             setBtn.addEventListener('click', event => {
                 event.preventDefault();
-                submitChangeGradesForm('add');
+                submitChangeGradesForm('set');
             });
 
             deleteBtn.addEventListener('click', event => {
@@ -465,6 +468,7 @@
             const data = {
                 subject: document.getElementById('subjectInputHomework').value,
                 description: document.getElementById('descriptionInput').value,
+                descriptionIsPlain: descriptionIsPlain
             };
 
             fetch('http://localhost:8080/dashboard/addHomework', {
@@ -497,7 +501,7 @@
         function submitHomeworkElementChanges(checked, id) {
             const data = {
                 checked: checked,
-                id: id
+                id: id,
             };
 
             fetch('http://localhost:8080/dashboard/homeworkChanges', {

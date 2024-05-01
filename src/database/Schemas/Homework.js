@@ -17,7 +17,11 @@ const HomeworkSchema = new mongoose.Schema({
     user: {
         type: mongoose.SchemaTypes.String,
         required: true,
+    },
+    descriptionIsPlain: {
+        type: mongoose.SchemaTypes.Boolean,
+        required: true
     }
 });
 
-module.exports = mongoose.model('todos', HomeworkSchema);
+module.exports = mongoose.model('homework', HomeworkSchema);
