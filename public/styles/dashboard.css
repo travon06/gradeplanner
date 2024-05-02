@@ -1,6 +1,6 @@
 
 body {
-    background-color: #E2C2B3;
+    background-color: #E2E2E2;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -9,9 +9,8 @@ body {
 }
 
 nav {
-    background-color: #403234;
-    color: #F7F3F5;
-    border: 1px solid black;
+    background-color: #0f535a;
+    color: #E2E2E2;
     box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.7);
     display: flex;
     justify-content: space-between;
@@ -22,10 +21,11 @@ nav #userInformation {
     display: flex;
     flex-direction: column
 }
+
 .button1 {
-    background-color: #F7F3F5;
-    border: 1px solid black;
-    box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.7);
+    background-color: #E2E2E2;
+    border: 1px solid hsl(0, 0%, 80%);
+    box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.5);
     border-radius: 10px;
     padding: 5px;
     width: 60px;
@@ -42,10 +42,9 @@ nav #userInformation {
 }
 
 .block {
-    background-color: #403234;
-    border: 1px solid black;
-    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.7);
-    color: #F7F3F5;
+    background-color: #19747E;
+    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.4);
+    color: #E2E2E2;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -63,8 +62,8 @@ nav #userInformation {
     right: -8%; /* Positioniert das Pseudo-Element so, dass es rechts über den Inhalt des Labels hinausragt */
     bottom: -3px; /* Positioniert das Pseudo-Element 3 Pixel über dem unteren Rand des Elternelements (als Unterstrich) */
     width: auto; /* Nimmt die volle Breite des Elternelements ein */
-    border-bottom: 10px solid #687477; /* Stil des Unterstrichs (blau) */
-    opacity: 80%;
+    border-bottom: 10px solid #D1E8E2; /* Stil des Unterstrichs (blau) */
+    opacity: 55%;
     z-index: -1;
 }
 .block input[type="text"] {
@@ -75,7 +74,7 @@ nav #userInformation {
     justify-content: center;
     font-size: 12px;
     background-color: hsl(0, 95%, 63%);
-    color: white;
+    color: #E2E2E2;
     padding: 10px;
     border-radius: 5px;
     height: max-content
@@ -87,8 +86,7 @@ nav #userInformation {
     display: flex;
     flex-direction: column;
     color: black;
-    border: 1px solid hsl(0, 0%, 80%);
-    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.4);
     margin: 5px;
     padding: 10px;
     border-radius: 10px;

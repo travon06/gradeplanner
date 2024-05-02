@@ -7,7 +7,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const path = require('path');
 
-
 require('./database/index');
 
 const PORT = process.env.PORT || 8080;
