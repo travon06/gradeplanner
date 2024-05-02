@@ -65,7 +65,6 @@ router.post('/changeGrades', async (req, res) => {
 
 router.post('/addHomework', async (req, res) => {
     const { subject, description, descriptionIsPlain } = req.body;
-    console.log(req.body);
     const UserId = req.session.user._id;
 
     if(!subject || !description) return res.status(400).json({err: 'One or two arguments are missing'});
