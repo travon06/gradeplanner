@@ -5,14 +5,17 @@ const dashboardRoute = require('./routes/dashboard');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const path = require('path');
+
 
 require('./database/index');
 
 const PORT = process.env.PORT || 8080;
+const staticPath = path.join(__dirname, '../public')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(express.static(staticPath));
 app.use(
     session({
         secret: 'JLBLHBWERLHBLHXBDJSJBDFL',
