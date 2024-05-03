@@ -42,14 +42,13 @@ function insertUserGrades(userdata) {
         newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')} | ${userGpa[subject].toFixed(1)}`;
         gradesDiv.appendChild(newGradesDivElement);
     
-        // display overall averrage
-        const averrageElement = document.createElement('span');
-
-        if (!isNaN(userGpa['Averrage'])) {
-            averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
-            gradesDiv.appendChild(averrageElement);
-        }
+    }
     
+    // display overall averrage
+    const averrageElement = document.createElement('span');    
+    if (!isNaN(userGpa['Averrage'])) {
+        averrageElement.innerHTML = `<strong>Averrage: </strong> ${(userGpa['Averrage']).toFixed(1)}`;
+        gradesDiv.appendChild(averrageElement);
     }
 }
 
@@ -93,7 +92,8 @@ function insertUserHomework(userdata) {
         const homeworkElementDescription = document.createElement('span');
         const homeworkElementLastRow = document.createElement('div');
         const homeworkElementCheckbox = document.createElement('input');
-        const homeworkElementDelete = document.createElement('input')
+        const homeworkElementDelete = document.createElement('input');
+
         if(homework.done) {
             homeworkElementCheckbox.checked = true;
             homeworkElement.style.backgroundColor = 'rgb(144, 241, 117)';
@@ -101,21 +101,27 @@ function insertUserHomework(userdata) {
         else {
             homeworkElementCheckbox.checked = false;
             homeworkElement.style.backgroundColor = 'rgb(241, 218, 117)';
-        
+        }
+
         homeworkElement.id = homework._id;
         homeworkElement.classList.add('homeworkElement');
-        
-        homeworkElementSubject.innerHTML = `<strong>${homework.subject}:</strong>`
+            
+        homeworkElementSubject.innerHTML = `<strong>${homework.subject}:</strong>`;
+        console.log(descriptionIsPlain);
+
         if(homework.descriptionIsPlain) {
             homeworkElementDescription.textContent = homework.description;
+            console.log("hello");
         } else {
             homeworkElementDescription.innerHTML = homework.description;
-        
+        }    
+            
         homeworkElementLastRow.style.display = 'flex';
         homeworkElementLastRow.style.justifyContent = 'flex-end'
         homeworkElementCheckbox.type = 'checkBox';
         homeworkElementCheckbox.style.alignSelf = 'flex-end';
         homeworkElementCheckbox.classList.add('checkbox')
+
         homeworkElementCheckbox.addEventListener('change', event => {
             if (event.target.checked) {
                 homeworkElement.style.backgroundColor = 'rgb(160, 232, 140)';
@@ -123,23 +129,23 @@ function insertUserHomework(userdata) {
                 homeworkElement.style.backgroundColor = 'rgb(255, 212, 163)';
             }
             submitHomeworkElementChanges(event.target.checked, homeworkElement.id);
-        })
+        });
+
         homeworkElementDelete.type = 'submit';
         homeworkElementDelete.classList.add('button1');
-        homeworkElementDelete.value = 'Delete'
+        homeworkElementDelete.value = 'Delete';
         homeworkElementDelete.addEventListener('click', event => {
             event.preventDefault();
             deleteHomeworkElement(homeworkElement.id);
-        })
+        });
+
         homeworkElementLastRow.appendChild(homeworkElementCheckbox);
         homeworkElementLastRow.appendChild(homeworkElementDelete);
-        
+
         homeworkElement.appendChild(homeworkElementSubject);
         homeworkElement.appendChild(homeworkElementDescription);
         homeworkElement.appendChild(homeworkElementLastRow)
         homeworkDiv.appendChild(homeworkElement);
-    }
-        }
     }
 }
 
@@ -285,7 +291,8 @@ function submitHomeworkElementChanges(checked, id) {
     const data = {
         checked: checked,
         id: id,
-    }
+    };
+
     fetch('http://localhost:8080/dashboard/homeworkChanges', {
         method: 'POST',
         headers: {
