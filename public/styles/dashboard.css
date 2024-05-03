@@ -8,7 +8,7 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-nav {
+header {
     background-color: #0f535a;
     color: #E2E2E2;
     box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.7);
@@ -17,7 +17,8 @@ nav {
     padding: 10px;
     height: max-content;
 }
-nav #userInformation {
+
+header #userInformation {
     display: flex;
     flex-direction: column
 }
@@ -28,7 +29,7 @@ nav #userInformation {
     box-shadow: 3px 3px 3px hsla(0, 0%, 0%, 0.5);
     border-radius: 10px;
     padding: 5px;
-    width: 60px;
+    min-width: 60px;
     height: 25px;
     transition: width .3s ease, heigth .3s ease
 }
@@ -50,11 +51,12 @@ nav #userInformation {
     padding: 20px;
     margin: 10px;
     height: max-content;
-    z-index: 1;
 }
 .headline {
     position: relative;
+    width: max-content;
 }
+
 .headline::after {
     content: ""; /* Fügt das ::after Pseudo-Element ein */
     position: absolute; /* Positioniert das Pseudo-Element relativ zum Elternelement */
@@ -64,11 +66,14 @@ nav #userInformation {
     width: auto; /* Nimmt die volle Breite des Elternelements ein */
     border-bottom: 10px solid #D1E8E2; /* Stil des Unterstrichs (blau) */
     opacity: 55%;
-    z-index: -1;
 }
+
 .block input[type="text"] {
     outline: none;
+    background-color: #E2E2E2;
+    border: none;
 }
+
 .block .errHandeler {
     display: none;
     justify-content: center;
@@ -81,6 +86,7 @@ nav #userInformation {
 }
 .block textarea {
     outline: none;
+    background-color: #E2E2E2;
 }
 .homeworkElement {
     display: flex;
@@ -100,15 +106,14 @@ nav #userInformation {
     -webkit-appearance: none;
     height: 20px;
     width: 20px;
-    border: 1px solid hsl(0, 0%, 80%);
-    background-color: rgb(144, 241, 117);
-    box-shadow: 2px 2px 2px hsla(0, 0%, 0%, 0.1);
+    background-color: #3CB371;
+    box-shadow: 2px 2px 2px hsla(0, 0%, 0%, 0.3);
     border-radius: 5px;
     cursor: pointer;
 }
 
 .checkbox:checked {
-    background-color: rgb(241, 218, 117);
+    background-color: #5acbd4;
 }
 #gradesDiv, #homeworkDiv {
     width: 60%;
@@ -119,11 +124,11 @@ nav #userInformation {
 }
 
 #changeGradesForm, #addHomeworkForm{
- width: 40%;
+    width: 40%;
 }
 
 #changeGradesForm  > *, #addHomeworkForm > *{
- margin: 5px;
+    margin: 5px;
 }
 
 textarea {
@@ -140,3 +145,103 @@ textarea {
     display: flex;
     justify-content: space-around;
 }
+
+.subject-dropdown {
+    background-color: #E2E2E2;
+    position: relative;
+    display: inline-block;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.subject-dropdown-button {
+    padding: 5px;
+    background-color: #E2E2E2;
+    font-size: 16px;
+    border: none;
+    min-width: 100px;
+    max-width: 100px;
+    text-align: left;
+}
+
+.subject-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #E2E2E2;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.subject-dropdown-content p {
+    color: black;
+    padding: 5px;
+    margin: 0px;
+}
+
+.subject-dropdown-content p:hover {
+    background-color: #cecece;
+    cursor: pointer;
+}
+
+
+.subject-dropdown:hover .subject-dropdown-content {
+    display: block;
+}
+
+.subject-dropdown-button:hover {
+    cursor: pointer;
+}
+
+.subject-line {
+    display: flex;
+    justify-content: space-around;
+    height: max-content;
+}
+
+.add-subject-window {
+    display: flex;
+    flex-direction: column;
+    background-color: #19747E;
+    color: #E2E2E2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 10px hsla(0, 0%, 0%, .4);
+    border: 1.5px solid #0f535a;
+    width: 400px;
+    min-height: 200px;
+    max-height: max-content;
+    z-index: 1000;
+}
+
+.add-subject-input {
+    align-self: center;
+    width: 150px;
+    margin-bottom: 30px;
+    height: 23px;
+    font-size: 16px;
+}
+
+.exit-button {
+    text-align: left;
+    background-color: rgb(255, 129, 129);
+    position: absolute;
+    border: none;
+    right: 0px;
+    top: 0px;
+    height: 20px;
+    width: 20px;
+    border-top-right-radius: 5px;
+    font-size: 16px;
+}
+
+.first-window-line {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+

@@ -24,6 +24,10 @@ const UserSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.Date,
         required: true,
         default: Date.now
+    },
+    subjects: {
+        type: mongoose.SchemaTypes.String,
+        required: true,
     }
 });
 

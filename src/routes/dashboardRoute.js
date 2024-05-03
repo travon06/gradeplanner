@@ -12,14 +12,14 @@ router.get('/userdata', async (req, res) => {
     const { _id } = req.session.user
     const UserDb = await User.findOne( {_id: _id })
     const homework = await Homework.find({user: req.session.user._id});
-    res.status(200).json({ email: UserDb.email, username: UserDb.username, grades: UserDb.grades, homework: homework });
+    res.status(200).json({ email: UserDb.email, username: UserDb.username, grades: UserDb.grades, homework: homework, subjects: UserDb.subjects });
 }) ;
 
 router.post('/changeGrades', async (req, res) => {
     const { subject, grades, operator } = req.body;
     console.log(req.body);
 
-    if(!subject) return res.status(400).json({ err: 'Subject is missing'});
+    if(subject == 'Subject') return res.status(400).json({ err: 'Subject is missing'});
     if(operator != 'delete' && !grades) return res.status(400).json({err: 'You need grades if you do not delete'})
 
     // formating grades and filtering if grade is NaN
@@ -101,5 +101,29 @@ router.post('/logout', (req, res) => {
 
     return res.status(200).json({ redirect: true, redirectTo: '/auth/login' });
 });
+
+router.post('/addSubject', async (req, res) => {
+    const { subject, operator } = req.body;
+    const user = req.session.user;
+
+    if(!subject) return res.status(400).json({err: 'Subject is missing'});
+
+    let userSubjects = JSON.parse(user.subjects);
+
+    if(operator === 'add') {
+        userSubjects.push(subject);
+    } else {
+        for(let i = 0; i < userSubjects.length; i++) {
+            if(userSubjects[i] == subject) userSubjects.splice(i, 1);
+        }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(user._id, { $set: {subjects: JSON.stringify(userSubjects)}}, { new: true });
+    
+    req.session.user = updatedUser;
+
+    return res.status(200).json({redirect: true, redirectTo: '/dashboard'});
+});
+
 
 module.exports = router;

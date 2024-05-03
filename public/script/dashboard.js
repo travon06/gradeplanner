@@ -1,14 +1,18 @@
 let descriptionIsPlain = true;
 
+// Colors for homeworkElement
+const homeworkElementCheckedColor = '#3CB371';
+const homeworkElementNotCheckedColor =  '#5acbd4';
+
 document.addEventListener('DOMContentLoaded', () => {
     loadUserdata().then(userdata => {
-        console.log(userdata.homework);
         insertUserProfile(userdata);
         insertUserGrades(userdata);
         insertUserHomework(userdata);
         setupLogOutBtn();
-        setupChangeGradesForm();
+        setupChangeGradesForm(userdata);
         setupAddHomeworkForm();
+        setupAddSubjectWindow(userdata);
     });
 });
 
@@ -96,22 +100,20 @@ function insertUserHomework(userdata) {
 
         if(homework.done) {
             homeworkElementCheckbox.checked = true;
-            homeworkElement.style.backgroundColor = 'rgb(144, 241, 117)';
+            homeworkElement.style.backgroundColor = homeworkElementCheckedColor;
         }
         else {
             homeworkElementCheckbox.checked = false;
-            homeworkElement.style.backgroundColor = 'rgb(241, 218, 117)';
+            homeworkElement.style.backgroundColor = homeworkElementNotCheckedColor;
         }
 
         homeworkElement.id = homework._id;
         homeworkElement.classList.add('homeworkElement');
             
         homeworkElementSubject.innerHTML = `<strong>${homework.subject}:</strong>`;
-        console.log(descriptionIsPlain);
 
         if(homework.descriptionIsPlain) {
             homeworkElementDescription.textContent = homework.description;
-            console.log("hello");
         } else {
             homeworkElementDescription.innerHTML = homework.description;
         }    
@@ -124,9 +126,9 @@ function insertUserHomework(userdata) {
 
         homeworkElementCheckbox.addEventListener('change', event => {
             if (event.target.checked) {
-                homeworkElement.style.backgroundColor = 'rgb(160, 232, 140)';
+                homeworkElement.style.backgroundColor = homeworkElementCheckedColor;
             } else {
-                homeworkElement.style.backgroundColor = 'rgb(255, 212, 163)';
+                homeworkElement.style.backgroundColor = homeworkElementNotCheckedColor;
             }
             submitHomeworkElementChanges(event.target.checked, homeworkElement.id);
         });
@@ -150,19 +152,39 @@ function insertUserHomework(userdata) {
 }
 
 // setup events for addGradeskForm
-function setupChangeGradesForm() {
-    const addGradesForm = document.getElementById('addGradesForm');
-    const subjectInput = document.getElementById('subjectInputGrades');
+function setupChangeGradesForm(userdata) {
+    const gradesSubjectDropdownButton = document.getElementById('gradesSubjectDropdownButton');
+    const gradesSubjectDropdownContent = document.getElementById('gradesSubjectDropdownContent');
+    const openWindowBtn = document.getElementById('openWindowBtn');
     const gradesInput = document.getElementById('gradesInput');
     const addBtn = document.getElementById('addBtn');
     const setBtn = document.getElementById('setBtn');
-    const deleteBtn = document.getElementById('deleteBtn')
-    subjectInput.addEventListener('keydown', event => {
-        if (event.keyCode === 13) {
+    const deleteBtn = document.getElementById('deleteBtn');
+
+    gradesSubjectDropdownButton.addEventListener('click', event => {
+        event.preventDefault();
+    });
+
+    const userSubjects = JSON.parse(userdata.subjects);
+    console.log(userSubjects);
+    
+    for(subject of userSubjects) {
+        const dropdownGradeElement = document.createElement('p');
+        dropdownGradeElement.textContent = subject;
+
+        dropdownGradeElement.addEventListener('click', event => {
             event.preventDefault();
-            gradesInput.focus();
-        }
-    })
+            gradesSubjectDropdownButton.textContent = event.target.textContent;
+        });
+
+        gradesSubjectDropdownContent.appendChild(dropdownGradeElement);
+    }
+
+    openWindowBtn.addEventListener('click', event => {
+        event.preventDefault();
+        document.getElementById('addSubjectWindow').style.display = 'flex';
+    });
+
     gradesInput.addEventListener('keydown', event => {
         if(event.keyCode === 13) {
             event.preventDefault();
@@ -190,7 +212,7 @@ function setupAddHomeworkForm() {
     const descriptionInput = document.getElementById('descriptionInput');
     const homeworkSubmitBtn = document.getElementById('homeworkSubmitBtn');
     const homeworkSwitchHTMLBtn = document.getElementById('homeworkSwitchHTMLBtn')
-    homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(255, 255, 255)';
+    homeworkSwitchHTMLBtn.style.backgroundColor = '#E2E2E2';
 
     subjectInput.addEventListener('keydown', event => {
         if (event.keyCode === 13) {
@@ -211,12 +233,12 @@ function setupAddHomeworkForm() {
         submitAddHomeworkForm();
     })
     homeworkSwitchHTMLBtn.addEventListener('click', event => {
-        if (homeworkSwitchHTMLBtn.style.backgroundColor == 'rgb(255, 255, 255)') {
+        if (homeworkSwitchHTMLBtn.style.backgroundColor != 'rgb(144, 241, 117)') {
             descriptionIsPlain = false;
             homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(144, 241, 117)';
         } else {
             descriptionIsPlain = true;
-            homeworkSwitchHTMLBtn.style.backgroundColor = 'rgb(255, 255, 255)';
+            homeworkSwitchHTMLBtn.style.backgroundColor = '#E2E2E2';
         }
     });
 }
@@ -224,7 +246,7 @@ function setupAddHomeworkForm() {
 // send changes grades changes to server
 function submitChangeGradesForm(operator) {
     const data = {
-        subject: document.getElementById('subjectInputGrades').value.trim(),
+        subject: document.getElementById('gradesSubjectDropdownButton').textContent,
         grades: document.getElementById('gradesInput').value,
         operator: operator
     }
@@ -378,5 +400,72 @@ function setupLogOutBtn() {
             console.error(err)
             alert(err);
         });
+    });
+}
+
+function setupAddSubjectWindow(userdata) {
+    const addSubjectWindow = document.getElementById('addSubjectWindow');
+    const exitBtn = document.getElementById('exitBtn');
+    const addSubjectInput = document.getElementById('addSubjectInput');
+    const addSubjectBtn = document.getElementById('addSubjectBtn');
+    const deleteSubjectBtn = document.getElementById('deleteSubjectBtn');
+    const subjectList = document.getElementById('subjectList');
+
+    exitBtn.addEventListener('click', event => {
+        event.preventDefault();
+        addSubjectWindow.style.display = 'none';
+    });
+
+    addSubjectInput.addEventListener('keydown', event => {
+        if(event.keyCode === 13) {
+            event.preventDefault();
+            submitSubjectChange('add');
+        }
+    })
+
+    addSubjectBtn.addEventListener('click', event => {
+            event.preventDefault();
+            submitSubjectChange('add');
+    });
+
+    deleteSubjectBtn.addEventListener('click', event => {
+        event.preventDefault();
+        submitSubjectChange('delete');
+    });
+
+    for(subject of JSON.parse(userdata.subjects)) {
+        const listElement = document.createElement('li');
+        listElement.textContent = subject;
+        subjectList.appendChild(listElement);
+    }
+}
+
+function submitSubjectChange(operator) {
+    console.log(document.getElementById('addSubjectInput').value);
+    const data = {
+        subject: document.getElementById('addSubjectInput').value,
+        operator: operator
+    }
+
+    fetch('http://localhost:8080/dashboard/addSubject', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        if(!res.ok) {
+            return res.json().then(err => {
+                throw new Error(err.err);
+            });
+        }
+        return res.json();
+    })
+    .then(data => {
+        if(data.redirect) window.location.href = data.redirectTo;
+    })
+    .catch(err => {
+        console.error(err);
     });
 }

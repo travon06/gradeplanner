@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = hashPassword(password);
 
-    const newUser = await User.create({username: username, email: email, password: hashedPassword});
+    const newUser = await User.create({username: username, email: email, password: hashedPassword, subjects: '["Math","German","English"]'});
 
     res.status(200).json({redirect: true, redirectTo: '/auth/login'});
 
