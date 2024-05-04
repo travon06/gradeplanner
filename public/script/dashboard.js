@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         insertUserHomework(userdata);
         setupLogOutBtn();
         setupChangeGradesForm(userdata);
-        setupAddHomeworkForm();
+        setupAddHomeworkForm(userdata);
         setupAddSubjectWindow(userdata);
     });
 });
@@ -43,11 +43,10 @@ function insertUserGrades(userdata) {
 
         const newGradesDivElement = document.createElement('span');
         newGradesDivElement.id = i;
-        newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')} | ${userGpa[subject].toFixed(1)}`;
+        newGradesDivElement.innerHTML = `<strong>${subject}: </strong>${grades.join(', ')}<span class="gpa">| ${userGpa[subject].toFixed(1)}</span>`;
         gradesDiv.appendChild(newGradesDivElement);
     
     }
-    
     // display overall averrage
     const averrageElement = document.createElement('span');    
     if (!isNaN(userGpa['Averrage'])) {
@@ -206,20 +205,30 @@ function setupChangeGradesForm(userdata) {
 }
 
 // setup events for addHomeworkForm
-function setupAddHomeworkForm() {
-    const addHomeworkForm = document.getElementById('addHomeworkForm');
-    const subjectInput = document.getElementById('subjectInputHomework');
+function setupAddHomeworkForm(userdata) {
+    const homeworkSubjectDropdownButton = document.getElementById('homeworkSubjectDropdownButton');
+    const homeworkSubjectDropdownContent = document.getElementById('homeworkSubjectDropdownContent');
     const descriptionInput = document.getElementById('descriptionInput');
     const homeworkSubmitBtn = document.getElementById('homeworkSubmitBtn');
     const homeworkSwitchHTMLBtn = document.getElementById('homeworkSwitchHTMLBtn')
     homeworkSwitchHTMLBtn.style.backgroundColor = '#E2E2E2';
 
-    subjectInput.addEventListener('keydown', event => {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            descriptionInput.focus();
-        }
+    const userSubjects = JSON.parse(userdata.subjects);
+    homeworkSubjectDropdownButton.addEventListener('click', event => {
+        event.preventDefault();
     });
+
+    for(subject of userSubjects) {
+        const dropdownGradeElement = document.createElement('p');
+        dropdownGradeElement.textContent = subject;
+
+        dropdownGradeElement.addEventListener('click', event => {
+            event.preventDefault();
+            homeworkSubjectDropdownButton.textContent = event.target.textContent;
+        });
+
+        homeworkSubjectDropdownContent.appendChild(dropdownGradeElement);
+    }
 
     descriptionInput.addEventListener('keydown', event => {
         if (event.keyCode === 13) {
@@ -278,7 +287,7 @@ function submitChangeGradesForm(operator) {
 // send new homework to server
 function submitAddHomeworkForm() {
     const data = {
-        subject: document.getElementById('subjectInputHomework').value,
+        subject: document.getElementById('homeworkSubjectDropdownButton').textContent,
         description: document.getElementById('descriptionInput').value,
         descriptionIsPlain: descriptionIsPlain
     }
@@ -421,7 +430,7 @@ function setupAddSubjectWindow(userdata) {
             event.preventDefault();
             submitSubjectChange('add');
         }
-    })
+    });
 
     addSubjectBtn.addEventListener('click', event => {
             event.preventDefault();

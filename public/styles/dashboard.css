@@ -148,6 +148,11 @@ textarea {
 
 .subject-dropdown {
     background-color: #E2E2E2;
+    border-top: 1px solid rgb(192, 192, 192);
+    border-bottom: 1px solid rgb(192, 192, 192);
+    border-left: 1px solid rgb(192, 192, 192);
+    border-right: 1px solid rgb(192, 192, 192); 
+    box-shadow: 4px 4px 4px hsla(0, 0%, 0%, .3);
     position: relative;
     display: inline-block;
     min-width: 100px;
@@ -157,8 +162,8 @@ textarea {
 .subject-dropdown-button {
     padding: 5px;
     background-color: #E2E2E2;
-    font-size: 16px;
     border: none;
+    font-size: 16px;
     min-width: 100px;
     max-width: 100px;
     text-align: left;
@@ -168,6 +173,13 @@ textarea {
     display: none;
     position: absolute;
     background-color: #E2E2E2;
+    background-color: #E2E2E2;
+    border-bottom: 1px solid rgb(192, 192, 192);
+    border-left: 1px solid rgb(192, 192, 192);
+    border-right: 1px solid rgb(192, 192, 192);
+    box-shadow: 4px 4px 4px hsla(0, 0%, 0%, .3);
+    left: -1px;
+    font-size: 16px;
     min-width: 100px;
     max-width: 100px;
 }
@@ -194,12 +206,12 @@ textarea {
 
 .subject-line {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     height: max-content;
 }
 
 .add-subject-window {
-    display: flex;
+    display: none;
     flex-direction: column;
     background-color: #19747E;
     color: #E2E2E2;
@@ -243,5 +255,9 @@ textarea {
     justify-content: space-around;
 }
 
+/* add space between grades an their gpa */
+.gpa {
+    margin-left: 20px;
+}
 
 

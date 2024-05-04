@@ -58,8 +58,10 @@
         </div>
         <form id="addHomeworkForm" class="block">
             <p id="homeworkErrHandeler" class="errHandeler"></p>
-            <label for="subjectInputHomework">Subject:</label>
-            <input type="text" id="subjectInputHomework" placeholder="Subject">
+            <div class="subject-dropdown">
+                <button id="homeworkSubjectDropdownButton" class="subject-dropdown-button">Subject</button>
+                <div id="homeworkSubjectDropdownContent" class="subject-dropdown-content"></div>
+            </div>
             <label for="descriptionInput">Description:</label>
             <textarea id="descriptionInput" cols="30" rows="7" placeholder="This is what I need to do"></textarea>
             <div id="homeworkBtnDiv">

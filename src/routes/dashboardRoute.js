@@ -67,7 +67,7 @@ router.post('/addHomework', async (req, res) => {
     const { subject, description, descriptionIsPlain } = req.body;
     const UserId = req.session.user._id;
 
-    if(!subject || !description) return res.status(400).json({err: 'One or two arguments are missing'});
+    if(subject == 'Subject' || !description) return res.status(400).json({err: 'One or two arguments are missing'});
 
     const test = await Homework.create({ subject: subject, description: description, user: UserId, descriptionIsPlain: descriptionIsPlain });
     console.log(test);
